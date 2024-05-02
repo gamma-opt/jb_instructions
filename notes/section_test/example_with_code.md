@@ -32,7 +32,7 @@ Here we create a function that takes in a list of numbers and outputs another li
 :sync: julia_tab
 ```julia
 function square_list(l)
-    n .^ 2
+    l .^ 2
 end
 ```
 ````
@@ -73,3 +73,18 @@ def square_list(x):
 ````
 
 `````
+
+## Note
+
+The above examples contain code blocks: they are only formatted and displayed.
+One can also add code cells, which will get executed. However, since these notebooks are associated with one kernel at a time, the niceties of presenting Python/Julia simulateneously don't extend to executing code.
+
+```{code-cell}
+l = [10, 20, 30]
+
+function square_list(l)
+    l .^ 2
+end
+
+square_list(l)
+```
