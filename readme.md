@@ -20,6 +20,10 @@ jb build notes
 - [Jupyter Book](https://jupyterbook.org/en/stable/intro.html)
 - [quantecon-book-theme](https://github.com/QuantEcon/quantecon-book-theme/blob/master/docs/index.md)
 
-## Todo:
+## Todo
 - how to replace QuantEcon logo in theme
   - `btn__qelogo` element
+- Figure out solution for keeping track of Julia packages
+
+## Notes for future
+- Updating julia seems to require rebuilding IJulia (and maybe first remove the old kernel with `jupyter kernelspec remove xxx`)

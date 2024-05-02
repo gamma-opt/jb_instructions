@@ -13,6 +13,10 @@ parts:
   chapters:
   - file: section_test/fundamental_types
   - file: section_test/example_with_code
+- caption: Interactivity
+  chapters:
+  - file: interactive_plots/python
+  - file: interactive_plots/julia
 - caption: Other
   chapters:
   - file: other/about

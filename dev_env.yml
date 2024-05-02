@@ -6,6 +6,9 @@ dependencies:
   # Should probably be installed for working with MyST-Md
   - jupytext
 
+  # For Python interactive plots
+  - bokeh
+
   # Temp, used in built-in examples
   - matplotlib
   - numpy
@@ -14,4 +17,5 @@ dependencies:
   - pip
   - pip:
     - git+https://github.com/QuantEcon/quantecon-book-theme.git
+
 
