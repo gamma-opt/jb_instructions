@@ -12,4 +12,7 @@ parts:
 - caption: Section Test
   chapters:
   - file: section_test/fundamental_types
-  - file: section_test/example_with_code.md
+  - file: section_test/example_with_code
+- caption: Other
+  chapters:
+  - file: other/about
