@@ -3,7 +3,13 @@
 
 format: jb-book
 root: intro
-chapters:
-- file: markdown
-- file: notebooks
-- file: markdown-notebooks
+parts:
+- caption: Jupyter-book init
+  chapters:
+  - file: markdown
+  - file: notebooks
+  - file: markdown-notebooks
+- caption: Section Test
+  chapters:
+  - file: section_test/fundamental_types
+  - file: section_test/example_with_code.md

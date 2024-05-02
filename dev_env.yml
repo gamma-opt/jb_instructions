@@ -1,0 +1,17 @@
+name: test
+dependencies:
+  - jupyter-book
+  - jupyterlab
+
+  # Should probably be installed for working with MyST-Md
+  - jupytext
+
+  # Temp, used in built-in examples
+  - matplotlib
+  - numpy
+
+  # For QuantEcon Book theme
+  - pip
+  - pip:
+    - git+https://github.com/QuantEcon/quantecon-book-theme.git
+
