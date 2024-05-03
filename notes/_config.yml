@@ -5,6 +5,10 @@ title: Optimization in Practice
 author: Fabricio Oliveira
 logo: logo.png
 
+parse:
+  myst_enable_extensions:
+    - amsmath
+
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:

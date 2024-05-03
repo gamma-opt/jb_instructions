@@ -13,6 +13,7 @@ parts:
   chapters:
   - file: section_test/fundamental_types
   - file: section_test/example_with_code
+  - file: section_test/math_and_margins
 - caption: Interactivity
   chapters:
   - file: interactive_plots/python
