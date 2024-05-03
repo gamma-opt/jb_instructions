@@ -1,0 +1,18 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+parts:
+- caption: Tooling
+  chapters:
+  - file: tooling/input_and_output
+  - file: tooling/config
+- caption: Content
+  chapters:
+  - file: content/markdown_and_sphinx
+  - file: content/math_and_code
+  - file: content/interactivity
+- caption: Other
+  chapters:
+  - file: other/about

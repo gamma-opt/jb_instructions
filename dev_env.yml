@@ -1,17 +1,11 @@
-name: test
+name: jb_course
+channels:
+  - conda-forge
 dependencies:
   - jupyter-book
-  - jupyterlab
-
-  # Should probably be installed for working with MyST-Md
-  - jupytext
 
   # For Python interactive plots
   - bokeh
-
-  # Temp, used in built-in examples
-  - matplotlib
-  - numpy
 
   # For QuantEcon Book theme
   - pip
