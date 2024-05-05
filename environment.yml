@@ -3,6 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - jupyter-book
+  - python=3.10
 
   # For Python interactive plots
   - bokeh
