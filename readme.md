@@ -15,7 +15,7 @@ To go through this template, you can either browse the files in the `course` dir
 
 ### (Optional) Create an environment
 
-A `conda` environment to build the website is provided in `dev_env.yml`. If you don't have `conda`, you can get it from [here](https://docs.conda.io/en/latest/). You can also try [`mamba` or `micromamba`](https://mamba.readthedocs.io/en/latest/index.html) for a faster alternative.
+A `conda` environment to build the website is provided in `environment.yml`. If you don't have `conda`, you can get it from [here](https://docs.conda.io/en/latest/). You can also try [`mamba` or `micromamba`](https://mamba.readthedocs.io/en/latest/index.html) for a faster alternative.
 
 Create the environment with
 ```
