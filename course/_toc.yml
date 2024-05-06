@@ -13,6 +13,7 @@ parts:
   - file: content/markdown_and_sphinx
   - file: content/math_and_code
   - file: content/interactivity
+  - file: content/makie
 - caption: Other
   chapters:
   - file: other/about
