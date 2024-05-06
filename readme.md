@@ -27,6 +27,11 @@ conda activate jb_course
 ```
  If you are about to develop a new course, you may want to give a more specific name to the environment using `-n`.
 
+ Also make sure Julia is ready with
+ ```
+pkg> activate .
+ ```
+
 ### Build the HTML files
 
 Running
