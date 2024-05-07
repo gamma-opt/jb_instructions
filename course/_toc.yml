@@ -8,6 +8,7 @@ parts:
   chapters:
   - file: tooling/input_and_output
   - file: tooling/config
+  - file: tooling/design
 - caption: Content
   chapters:
   - file: content/markdown_and_sphinx

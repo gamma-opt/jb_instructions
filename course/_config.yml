@@ -3,7 +3,7 @@
 
 title: Course template
 author: Tunç Başar Köse
-logo: logo.png
+logo: _static/logo.png
 only_build_toc_files: true
 
 # Code execution settings
