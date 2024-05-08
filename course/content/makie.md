@@ -16,7 +16,8 @@ kernelspec:
 # Interactive plots in Julia
 
 
-Makie seems to work, though there may be small issues to be wary of. For example, the formatting on this page is broken because the last example is using `TailwindDashboard`, which overwrites some styling.
+Formatting in this page is a bit broken because the last example is using `TailwindDashboard`, which overwrites some styling.
+I'll remove it, add other examples and annotate what is going on/make this a better form for the template when a bug fix is released ([status here](https://github.com/JuliaRegistries/General/pull/106399)).
 
 
 ```{code-cell}
@@ -94,5 +95,61 @@ app = App() do session
         update_svg(observables.map(x=> x.value))
         """)
     return DOM.div(D.FlexRow(D.FlexCol(nsamples, sample_step, phase, radii), svg))
+end
+```
+
+
+```{code-cell}
+app = App() do session
+    text = TextField("test")
+    slider = Slider(1:10, startvalue = 2)
+    slider_val = DOM.p(slider[])
+    fig, ax, plot = ablines(0,2)
+
+    onjs(session, text.value, js"(v) => console.log(v)")
+    #onjs(session, slider.value, js"""function on_update(new_val) {
+    #    const p_element = $(slider_val)
+    #    p_element.innerText = new_val
+    #    $(plot).then(plots=>{
+    #        
+    #    })
+    #}
+    #""")
+
+    Bonito.on_document_load(session, js"""
+        $(plot).then(plots=>{
+            const abline = plots[0]
+            console.log(abline)
+        })
+    """)
+
+    return DOM.div(text, slider, slider_val, fig)
+end
+```
+
+
+```{code-block}
+App() do session::Session
+    s1 = Slider(1:100)
+    slider_val = DOM.p(s1[])
+    fig, ax, splot = scatter(1:4)
+
+    on_document_load(session, js"""
+        $(splot).then(plots=>{
+            const scatter_plot = plots[0]
+            console.log(scatter_plot)
+        })
+    """)
+
+    onjs(session, s1.value, js"""function on_update(new_value) {
+        $(splot).then(plots=>{
+            const scatter_plot = plots[0]
+            scatter_plot.geometry.attributes.pos.array[0] = (new_value/100) * 4
+            scatter_plot.geometry.attributes.pos.array[1] = (new_value/100) * 4
+            scatter_plot.geometry.attributes.pos.needsUpdate = true
+        })
+    }
+    """)
+    return DOM.div(s1, fig)
 end
 ```
