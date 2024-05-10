@@ -1,0 +1,70 @@
+name: jupyterbook-pdf
+run-name: ${{ github.repository }} build PDF with Jupyter-Book
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "course/**"
+  workflow_dispatch: # allow manual triggering
+
+# For julia-actions/cache and creating pull requests
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+jobs:
+
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - name: Set up Python environment
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: environment.yml
+          cache-environment: true
+      
+      - name: Install Julia
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.10'  # Should be the same as what MyST-md expects
+      
+      - name: Julia environment cache
+        uses: julia-actions/cache@v1
+
+      - name: Prepare Julia environment
+        run: |
+          using Pkg
+          Pkg.activate(".")
+          Pkg.instantiate()
+        shell: julia --color=yes {0}
+        
+      - name: Install latex dependencies
+        run: |
+          sudo apt-get -qq update
+          sudo apt-get install -y     \
+            texlive-latex-recommended \
+            texlive-latex-extra       \
+            texlive-fonts-extra       \
+            fonts-freefont-otf        \
+            texlive-xetex             \
+            latexmk                   \
+            xindy
+        
+      - name: Build PDF from LaTeX
+        shell: bash -leo pipefail {0}  # Needed for mamba profile
+        run: jupyter-book build course --builder pdflatex -n
+
+      - name: Move PDF
+        run: mv course/_build/latex/book.pdf book.pdf
+
+      - name: Create PR with Updated PDF
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: '[create-pull-request] update PDF'
+          delete-branch: true
+          title: Update PDF
