@@ -35,8 +35,6 @@ surface(
 )
 ```
 
-One can also have interactive elements like sliders, though the startvalue is not working for some reason [I made an issue](https://github.com/MakieOrg/Makie.jl/issues/3849).
-
 ```{code-cell}
 App() do session
     s = Slider(1:5, startvalue=2)
@@ -50,7 +48,8 @@ end
 
 ```{code-cell}
 app = App() do session
-    slider = Slider(1:10, startvalue = 2)
+    slider = Slider(1:10)
+    slider[] = 2  # startvalue doesn't work, do it manually
     slider_val = DOM.p(slider[])
 
     onjs(session, slider.value, js"""function on_update(new_val) {
