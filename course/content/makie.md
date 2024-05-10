@@ -15,10 +15,7 @@ kernelspec:
 
 # Interactive plots in Julia
 
-
-Formatting in this page is a bit broken because the last example is using `TailwindDashboard`, which overwrites some styling.
-I'll remove it, add other examples and annotate what is going on/make this a better form for the template when a bug fix is released ([status here](https://github.com/JuliaRegistries/General/pull/106399)).
-
+As a simple example, one can rotate and zoom in/out with 3D plots.
 
 ```{code-cell}
 using WGLMakie, Bonito
@@ -38,15 +35,11 @@ surface(
 )
 ```
 
-```{code-cell}
-app = App() do
-    return DOM.div(DOM.h1("hello world"), js"""console.log('hello world')""")
-end
-```
+One can also have interactive elements like sliders, though the startvalue is not working for some reason [I made an issue](https://github.com/MakieOrg/Makie.jl/issues/3849).
 
 ```{code-cell}
 App() do session
-    s = Slider(1:3)
+    s = Slider(1:5, startvalue=2)
     value = map(s.value) do x
         return x ^ 2
     end
@@ -56,48 +49,29 @@ end
 ```
 
 ```{code-cell}
-import Bonito.TailwindDashboard as D
 app = App() do session
-    colors = ["black", "gray", "silver", "maroon", "red", "olive", "yellow", "green", "lime", "teal", "aqua", "navy", "blue", "purple", "fuchsia"]
-    nsamples = D.Slider("nsamples", 1:200, value=100)
-    nsamples.widget[] = 100
-    sample_step = D.Slider("sample step", 0.01:0.01:1.0, value=0.1)
-    sample_step.widget[] = 0.1
-    phase = D.Slider("phase", 0.0:0.1:6.0, value=0.0)
-    radii = D.Slider("radii", 0.1:0.1:60, value=10.0)
-    radii.widget[] = 10
-    svg = DOM.div()
-    evaljs(session, js"""
-        const [width, height] = [900, 300]
-        const colors = $(colors)
-        const observables = $([nsamples.value, sample_step.value, phase.value, radii.value])
-        function update_svg(args) {
-            const [nsamples, sample_step, phase, radii] = args;
-            const svg = (tag, attr) => {
-                const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-                for (const key in attr) {
-                    el.setAttributeNS(null, key, attr[key]);
-                }
-                return el
-            }
-            const color = (i) => colors[i % colors.length]
-            const svg_node = svg('svg', {width: width, height: height});
-            for (let i=0; i<nsamples; i++) {
-                const cxs_unscaled = (i + 1) * sample_step + phase;
-                const cys = Math.sin(cxs_unscaled) * (height / 3.0) + (height / 2.0);
-                const cxs = cxs_unscaled * width / (4 * Math.PI);
-                const circle = svg('circle', {cx: cxs, cy: cys, r: radii, fill: color(i)});
-                svg_node.appendChild(circle);
-            }
-            $(svg).replaceChildren(svg_node);
-        }
-        Bonito.onany(observables, update_svg)
-        update_svg(observables.map(x=> x.value))
-        """)
-    return DOM.div(D.FlexRow(D.FlexCol(nsamples, sample_step, phase, radii), svg))
+    slider = Slider(1:10, startvalue = 2)
+    slider_val = DOM.p(slider[])
+
+    onjs(session, slider.value, js"""function on_update(new_val) {
+        const p_element = $(slider_val)
+        p_element.innerText = new_val
+    }
+    
+    """)
+
+    Bonito.on_document_load(session, js"""
+        const p_element = $(slider_val)
+        console.log("slider: ", p_element.innerText)
+    """)
+
+    return DOM.div(slider, slider_val)
 end
 ```
-
+These sliders can be tied to various aspects of the plot (found under `geometry` or `material`). 
+In the below graph, the slider value is used as the slope.
+The Javascript code calculates a new end-point for the line segment and updates it.
+There is also a text box but it is not doing anything yet.
 
 ```{code-cell}
 app = App() do session
@@ -107,34 +81,44 @@ app = App() do session
     fig, ax, plot = ablines(0,2)
 
     onjs(session, text.value, js"(v) => console.log(v)")
-    #onjs(session, slider.value, js"""function on_update(new_val) {
-    #    const p_element = $(slider_val)
-    #    p_element.innerText = new_val
-    #    $(plot).then(plots=>{
-    #        
-    #    })
-    #}
-    #""")
+    onjs(session, slider.value, js"""function on_update(new_val) {
+        $(plot).then(plots=>{
+            const abline = plots[0]
+            const x = abline.geometry.attributes.linepoint_end.data.array[4]
+            abline.geometry.attributes.linepoint_end.data.array[5] = x*new_val
+            abline.geometry.attributes.linepoint_end.needsUpdate = true
+        })
+    }
+    """)
+    onjs(session, slider.value, js"""function on_update(new_val) {
+        const p_element = $(slider_val)
+        p_element.innerText = new_val
+    }
+    
+    """)
 
     Bonito.on_document_load(session, js"""
         $(plot).then(plots=>{
             const abline = plots[0]
             console.log(abline)
         })
+
+        const p_element = $(slider_val)
+        console.log("slider: ", p_element.innerText)
     """)
 
     return DOM.div(text, slider, slider_val, fig)
 end
 ```
+Here the slider moves the first point.
 
-
-```{code-block}
-App() do session::Session
+```{code-cell}
+app = App() do session::Session
     s1 = Slider(1:100)
     slider_val = DOM.p(s1[])
     fig, ax, splot = scatter(1:4)
 
-    on_document_load(session, js"""
+    Bonito.on_document_load(session, js"""
         $(splot).then(plots=>{
             const scatter_plot = plots[0]
             console.log(scatter_plot)
@@ -153,3 +137,6 @@ App() do session::Session
     return DOM.div(s1, fig)
 end
 ```
+
+## Further reading
+- [WGLMakie docs](https://docs.makie.org/stable/explanations/backends/wglmakie/)
