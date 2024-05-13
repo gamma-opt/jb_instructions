@@ -1,4 +1,4 @@
-# `jupyter-book` template for course notes/website
+# Instructions for our `jupyter-book` template (for course notes/website)
 
 ## What is this?
 
