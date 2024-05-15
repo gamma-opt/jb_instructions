@@ -1,2 +1,21 @@
 format: jb-book
 root: intro
+parts:
+- caption: Guides
+  chapters:
+  - file: guides/new_course
+  - file: guides/update_from_template
+- caption: Tooling
+  chapters:
+  - file: tooling/input_and_output
+  - file: tooling/config
+  - file: tooling/pdf
+- caption: Content
+  chapters:
+  - file: content/markdown_and_sphinx
+  - file: content/math_and_code
+  - file: content/interactivity
+  - file: content/makie
+- caption: Other
+  chapters:
+  - file: other/about

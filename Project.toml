@@ -1,2 +1,4 @@
 [deps]
+Bonito = "824d6782-a2ef-11e9-3a09-e5662e0c26f8"
 IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
+WGLMakie = "276b4fcb-3e11-5398-bf8b-a0c2d153d008"
