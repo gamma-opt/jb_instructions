@@ -22,6 +22,17 @@ git stash pop
 
 Assuming the template is already added to the remotes of your course repository, fetch the latest changes from the template and initiate the rebase process.
 
+````{tip}
+You can check the remotes of your repository with
+```bash
+git remote -v
+```
+If the template is not there, add it with
+```bash
+git remote add template <url>
+```
+````
+
 ```bash
 git fetch template
 git rebase template/main
