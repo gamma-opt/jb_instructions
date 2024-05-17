@@ -9,7 +9,7 @@ The template provides the basic `jupyter-book` skeleton along with some customiz
 The biggest of these are 
 - various settings like LaTeX macros and using the [QuantEcon theme](https://github.com/QuantEcon/quantecon-book-theme) (found in `course/_config.yml`),
 - tweaks to the theme that changes the toolbar logo and removes the "Download PDF" button (found in `course/_static`), and
-- GitHub workflows to compile the PDF and create a pull request to update it or deploy GitHub Pages whenever something is pushed to `course/` (found in `.github/`).
+- GitHub workflows to compile the PDF and update it or deploy GitHub Pages whenever something is pushed to `course/` (found in `.github/`).
 
 ## Making a New Course
 
@@ -47,11 +47,11 @@ If you don't want to use them, you can just delete them now or disable them ([he
 Even if you want to use them, it may be a good idea to disable them on GitHub, until a significant amount of the content is ready.
 
 ```{important}
-If you'd like to use the PDF workflow, make sure you give permissions to Actions to create pull requests, under Settings->Actions->General->Workflow permissions.
+If you'd like to use the PDF workflow and you are not Fabricio, you may want to change the git details at the bottom of the workflow.
 ```
 
 ```{warning}
-If you change the latex target name in `_config.yml`, make sure to update the "Move PDF" step in `workflows/jupyterbook-pdf.yml` with the new name.
+If you change the latex target name in `_config.yml`, make sure to update the last step in `workflows/jupyterbook-pdf.yml` with the new name.
 ```
 
 ### 4. Prepare the course
