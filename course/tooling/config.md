@@ -29,6 +29,12 @@ This is a reasonable, but not the sole way to organize the structure. For more e
 To add a new page, create a file somewhere in the `course` directory and add it to `_toc.yml`.
 ```
 
+### Numbering Chapters
+
+By default, chapters are unnumbered.
+Enabling numbering can depend on the structure of your `_toc.yml` and how you want to configure it, but for the above example, it is done by adding `numbering: true` under every caption.
+
+
 ## Notes on design
 
 There are two issues to consider here that work separately: the design of the website and the design of the PDF produced (assuming the latter happens via LaTeX).
