@@ -1,4 +1,4 @@
-# MyST and Sphinx
+# MyST-and-Sphinx Way of Doing Things
 
 There are a lot of features that may come up when designing notes/webpages.
 If you've followed this guide linearly so far, you should have seen notes on margins, highlighted text (also called admonitions) and will see synced tabs, code output and possibly other things too.
@@ -12,7 +12,7 @@ content
 
 ````{dropdown} I am a directive too! Click me!
 
-There are also roles, which are _in-line_ directives, great for things like adding math like {math}`a^2+b^2=c^2` or abbreviations like {abbr}`KKT (Karush–Kuhn–Tucker)`.
+There are also roles, which are _in-line_ directives, great for things like adding math like {math}`a^2+b^2=c^2` or abbreviations like {abbr}`KKT (Karush–Kuhn–Tucker)` that one can hover over.
 The often look like this:
 ```md
 {role-name}`content` 
@@ -23,6 +23,26 @@ This distinction may be helpful when googling.
 Everything that is not just regular text is probably some directive.
 Some of these features can be achieved with Markdown or LaTeX as well, but using the correct directive often offers more configurability.
 If you see something on these pages that you'd like to use, check out its source file.
+
+## Images and Figures
+
+One can add images  the Markdown way (via `![](<link-to-image>))`). Sphinx has an [`{image}` directive](https://docutils.sourceforge.io/docs/ref/rst/directives.html#image), where one can specify layout and alignment.
+An often better alternative is the [`{figure}` directive](https://docutils.sourceforge.io/docs/ref/rst/directives.html#figure), which allows for captions and referencing as well.
+````md
+```{figure} picture.png
+:label: example_picture
+:align: center
+
+This is the caption.
+```
+````
+
+```{important}
+You can't add a PDF as an image in an HTML file. 
+While there seems to be [a mechanism](https://mystmd.org/guide/figures#image-transformers) to automatically convert things when needed, I couldn't get it to work yet.
+But a reliable way to make images work, if you'd like to use `.png` in HTML files and `.pdf` in LaTeX, is to save both file types in the same directory, and give the image path as for example `images/myimage.*`.
+The appropriate version should be picked automatically for different types of outputs being built.
+```
 
 ## Further Reading
 - [Jupyter Book page](https://jupyterbook.org/en/stable/content/index.html) on various directives and roles.

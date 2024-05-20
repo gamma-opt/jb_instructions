@@ -57,9 +57,68 @@ and the unnumbered equivalents with `*`.
 `\label`s inside these environments may not work properly, so if you'd like to refer to equations, prefer the directive described above. For multiple labels in the same environment, make sure you read {ref}`annoyance:multiple-labels`.
 ```
 
-### More
+```{attention}
+Avoid using `$$` for math environments, in my random testing it didn't work well sometimes.
+```
 
-For formatting mathematical text like definitions and proofs, see [here](https://jupyterbook.org/en/stable/content/proof.html).
+### Mathematical Statements
+
+For formatting mathematical text like definitions and proofs, the [`sphinx-proof`](https://sphinx-proof.readthedocs.io/en/latest/index.html) package is used.
+This package defines a number of additional directives, such as `{prf:proof}` and `{prf:algorithm}`.
+Check the website for a complete list.
+
+````md
+```{prf:algorithm} Barrier method for LP
+:label: p1c7:alg:barrier_method
+
+1. **initialise.** (primal-dual feasible) $(x^0, p^0, u^0)$, $\epsilon > 0$, $\mu_0 = \mu_1>0$,
+
+2. $\beta \in (0,1)$, $k = 0$. 
+
+3. **while** $n \mu_k > \epsilon$
+
+    1. compute $d^{k+1} = (d_x^{k+1}, d_p^{k+1}, d_u^{k+1})$ using {math}`\eqref{p1c7:eq:infeasible_perturbed_system}`
+
+    2. compute appropriate step size $\theta^{k+1} = (\theta_p^{k+1}, \theta_d^{k+1}$)
+
+    3. $(x^{k+1}, p^{k+1}, u^{k+1}) = (x^k, p^k, u^k) + \theta^{k+1}d^{k+1}$
+
+    4. $k = k+1$
+
+    5. $\mu_{k+1} = \beta\mu_k$
+
+4. **end while**
+
+5. **return** $(x^k, p^k, u^k)$.
+```
+````
+
+```{prf:algorithm} Barrier method for LP
+:label: p1c7:alg:barrier_method
+
+1. **initialise.** (primal-dual feasible) $(x^0, p^0, u^0)$, $\epsilon > 0$, $\mu_0 = \mu_1>0$,
+
+2. $\beta \in (0,1)$, $k = 0$. 
+
+3. **while** $n \mu_k > \epsilon$
+
+    1. compute $d^{k+1} = (d_x^{k+1}, d_p^{k+1}, d_u^{k+1})$ using {math}`\eqref{p1c7:eq:infeasible_perturbed_system}`
+
+    2. compute appropriate step size $\theta^{k+1} = (\theta_p^{k+1}, \theta_d^{k+1}$)
+
+    3. $(x^{k+1}, p^{k+1}, u^{k+1}) = (x^k, p^k, u^k) + \theta^{k+1}d^{k+1}$
+
+    4. $k = k+1$
+
+    5. $\mu_{k+1} = \beta\mu_k$
+
+4. **end while**
+
+5. **return** $(x^k, p^k, u^k)$.
+```
+
+When using this package and compiling a PDF, `sphinx-proof` seems to automatically add a proof index at the end.
+I disabled it in the template by adding to the config `latex_domain_indices: false `, but it can be enabled back if desired.
 
 ## Code
 
