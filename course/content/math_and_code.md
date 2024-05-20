@@ -54,7 +54,7 @@ Having enabled `amsmath` in `_config.yml`, one can also use the math environment
 and the unnumbered equivalents with `*`.
 
 ```{warning}
-`\label`s inside these environments may not work properly, so if you'd like to refer to equations, prefer the directive described above.
+`\label`s inside these environments may not work properly, so if you'd like to refer to equations, prefer the directive described above. For multiple labels in the same environment, make sure you read {ref}`annoyance:multiple-labels`.
 ```
 
 ### More
