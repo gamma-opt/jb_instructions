@@ -1,5 +1,6 @@
 [![GitHub Pages with jupyter-book](../../actions/workflows/jupyterbook-ghpages.yml/badge.svg)](../../actions/workflows/jupyterbook-ghpages.yml)
 [![jupyterbook-pdf](../../actions/workflows/jupyterbook-pdf.yml/badge.svg)](../../actions/workflows/jupyterbook-pdf.yml)
+[![](https://img.shields.io/badge/View%20on%20GitHub%20Pages-blue)](https://gamma-opt.github.io/jb_instructions/intro.html)
 
 # Instructions for our `jupyter-book` template (for course notes/website)
 
@@ -8,7 +9,7 @@
 This repo contains instructions on using the [`jupyter-book`](https://jupyterbook.org/en/stable/intro.html)-based templatewe have [here](https://github.com/gamma-opt/jb_course_template) for creating course notes and websites. 
 This instructions repository itself is built on top of the template!
 
-You can browse this repository best by looking at its Github Pages deployment (ADD LINK WHEN I KNOW), or build it in either HTML or PDF form following the instructions below.
+You can browse this repository best by looking at its [Github Pages deployment](https://gamma-opt.github.io/jb_instructions/intro.html), or build it in either HTML or PDF form following the instructions below.
 
 ## Building
 
