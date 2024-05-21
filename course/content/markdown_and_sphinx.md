@@ -44,6 +44,24 @@ But a reliable way to make images work, if you'd like to use `.png` in HTML file
 The appropriate version should be picked automatically for different types of outputs being built.
 ```
 
+## Footnotes
+
+There is no Sphinx way of adding footnotes.
+You can use the Markdown way:
+````md
+Text with footnote [^1]. More text.
+
+[^1]: I'm the footnote.
+````
+results in:
+
+Text with footnote [^1]. More text.
+
+[^1]: I'm the footnote.
+
+In HTML outputs, the footnote is put to the bottom of the page.
+For more immediate visibility, you may want to use admonition or margin directives instead.
+
 ## Further Reading
 - [Jupyter Book page](https://jupyterbook.org/en/stable/content/index.html) on various directives and roles.
 - MyST pages [here](https://myst-parser.readthedocs.io/en/latest/syntax/roles-and-directives.html) and [here](https://mystmd.org/guide/admonitions).
