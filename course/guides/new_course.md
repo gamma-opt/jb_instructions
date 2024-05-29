@@ -16,7 +16,7 @@ The biggest of these are
 ### 1. Copy the template and clone it into your machine.
 
 You can either fork the template repository, or clone it and push to a new repository you created. The difference between these two is that forking will leave you with messages like this:
-```{image} ../resources/x_commits_ahead.png
+```{image} ../_static/x_commits_ahead.png
 :name: x commits ahead
 ```
 

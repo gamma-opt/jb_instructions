@@ -8,7 +8,7 @@ I'll keep track of "big" problems or unintuitive solutions to them here.
 [Relevant GitHub issue](https://github.com/sphinx-doc/sphinx/issues/12379)
 
 Suppose you'd like to type the following equation:
-```{image} ../resources/multiple_labels.png
+```{image} ../_static/multiple_labels.png
 :name: Equations with multiple labels
 ```
 
