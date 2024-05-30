@@ -44,6 +44,10 @@ But a reliable way to make images work, if you'd like to use `.png` in HTML file
 The appropriate version should be picked automatically for different types of outputs being built.
 ```
 
+## References
+
+Examples [here](https://jupyterbook.org/en/stable/tutorials/references.html#create-a-citation).
+
 ## Footnotes
 
 There is no Sphinx way of adding footnotes.

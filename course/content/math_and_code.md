@@ -77,7 +77,7 @@ Check the website for a complete list.
 
 3. **while** $n \mu_k > \epsilon$
 
-    1. compute $d^{k+1} = (d_x^{k+1}, d_p^{k+1}, d_u^{k+1})$ using {math}`\eqref{p1c7:eq:infeasible_perturbed_system}`
+    1. compute $d^{k+1} = (d_x^{k+1}, d_p^{k+1}, d_u^{k+1})$
 
     2. compute appropriate step size $\theta^{k+1} = (\theta_p^{k+1}, \theta_d^{k+1}$)
 

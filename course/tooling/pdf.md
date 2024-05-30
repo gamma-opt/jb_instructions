@@ -1,5 +1,11 @@
 # Building a PDF
 
+One can use
+```bash
+jb build course --builder pdflatex
+```
+to create a PDF instead of HTML output.
+
 With the default options, the PDF output is not perfect.
 For example, margins and code-blocks/cells have a lot of space for improvement, and admonitions could use some coloring.
 It is possible to customize these and more via the [Sphinx LaTeX options](https://www.sphinx-doc.org/en/master/latex.html).
