@@ -20,6 +20,7 @@ parts:
   - file: content/math_and_code
   - file: content/interactivity
   - file: content/makie
+  - file: content/diagrams
 - caption: Other
   numbered: true
   chapters:
