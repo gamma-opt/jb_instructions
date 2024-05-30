@@ -46,7 +46,14 @@ The appropriate version should be picked automatically for different types of ou
 
 ## References
 
-Examples [here](https://jupyterbook.org/en/stable/tutorials/references.html#create-a-citation).
+Here is a citation {cite}`Oliveira2013`.
+
+And here is a bibliography:
+
+```{bibliography}
+```
+
+More examples and configuration [here](https://jupyterbook.org/en/stable/tutorials/references.html#create-a-citation).
 
 ## Footnotes
 
