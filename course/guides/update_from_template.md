@@ -2,9 +2,7 @@
 
 In this guide, I'll go through the steps of pulling the changes made to our [template](https://github.com/gamma-opt/jb_course_template) into your new course repo.
 
-We will do so by rebasing, i.e. going back in _git history_ to when the course was cloned/forked, seamlessly applying the changes to the template, and putting back the course-specific commits.
-
-This is probably not the only way to sync the changes made to the template repo, but I think it may be the cleanest.
+We will do so by merging, i.e. by treating the course repo as if it is a branch diverged from the template, and joining them together.
 
 ## Preparation
 
@@ -13,12 +11,12 @@ If it does, you can save them with
 ```bash
 git stash
 ```
-and then restore them once you are done with
+and then once you are done, restore them with
 ```bash
 git stash pop
 ```
 
-## Rebasing
+## Merging
 
 Assuming the template is already added to the remotes of your course repository, fetch the latest changes from the template and initiate the rebase process.
 
@@ -35,39 +33,41 @@ git remote add template <url>
 
 ```bash
 git fetch template
-git rebase template/main
+git merge template/main
 ```
 
-`git` will automatically apply all the course-specific commits on top of the latest template.
+`git` will automatically try to combine all commits made since the latest common ancestor.
 For example, in `_config.yml`, if you renamed the course title from "Course template" to "Underwater Basket Weaving", `git` should have no problem resolving that.
 
 However, you may end up with some conflicts, for example if the course added a specific LaTeX macro in `_config.yml` and the template had a different change to the same file.
 However, due to the template being very bare-bones, these conflicts should be minimal and easy to resolve.
 
-Resolve the conflicts by editing those files, and then mark them as ready with
+While `git` will instruct you on what to do, in most cases conflicts can be resolved by editing those files, and then marking them as ready with
 ```bash
 git add {changed files}
 ```
-then continue the rebase with
+then continuing the merge with
 ```bash
-git rebase --continue
+git commit
 ```
 
 Be careful with the `add` command, don't accidentally introduce new files.
 For example, if the folder contains untracked files, `git stash` won't get rid of them, so if you were to do `git add .`, you will end up commiting them as well.
 
-If something goes wrong, you can abort the process with
+If something goes wrong, you can often abort the process with
 ```bash
-git rebase --abort
+git merge --abort
 ```
 and go back to the start.
+But this may not work 100% of the time, so do be careful.
 
-You may need to repeat the above resolve-and-continue process multiple times, but at the end your local repository should be updated.
+At the end, you'll have a merge commit.
+Give it an informative message, like "Merge: Updated to latest template".
 
 ## Done
 
 Push the changes with
 ```bash
-git push origin main --force-with-lease
+git push origin main
 ```
-and you should be good to go. Here the force flag is needed as we _rewrote history_ in `git`'s eyes, but `-with-lease` part should prevent problems if someone else happened to push a change while you were busy with the updating process.
+and you should be good to go.
