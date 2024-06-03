@@ -7,6 +7,7 @@ parts:
   - file: guides/new_course
   - file: guides/update_from_template
   - file: guides/tsp_example
+  - file: guides/standalone_svg
 - caption: Tooling
   numbered: true
   chapters:
