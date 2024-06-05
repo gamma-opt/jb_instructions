@@ -27,3 +27,4 @@ parts:
   chapters:
   - file: other/annoyances
   - file: other/about
+  - file: other/admonitions.md
