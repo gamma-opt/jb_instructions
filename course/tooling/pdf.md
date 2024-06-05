@@ -21,3 +21,4 @@ For more details, see {ref}`annoyance:qbt-version`.
 - Source Sans Pro is set as the default text font, matching the HTML theme.
 Size is set to 11pt, because I thought 10 was too small and 12 too big.
 - Titles, links and admonitions are colored using the (shades of the) first four colors [here](https://coolors.co/0072bc-ffffff-c46e71-40c9a2-522b47).
+- Chapter styling is adjusted with `titlesec`.
