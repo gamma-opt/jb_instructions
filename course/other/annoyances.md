@@ -73,3 +73,13 @@ The alternative is to install it normally, then set the `mermaid_cmd` in `_confi
 This would work, except it doesn't due to a bug in `sphinxcontrib-mermaid` (Github issue [here](https://github.com/mgaitan/sphinxcontrib-mermaid/issues/89)).
 My hope is that I can get more activity in the issue (and make a PR myself if needed).
 If not, an alternative solution is to change the package management in a way that would make keeping track of things easier, for example using a Nix flake.
+
+(annoyance:qbt-version)=
+## `quantecon-book-theme`-imposed version constraints
+
+Creating a `conda` environment with the current `environment.yml` will result in having `sphinx==5.3` (even though `conda` may report is as a more recent version).
+This is because pip installing `quantecon-book-theme` downgrades `sphinx`.
+This is now annoying because some configuration options for PDF (like `sphinxlightbox`-based admonitions, e.g. `{note}`) are added in a later version of `sphinx`.
+Naively removing the constraints in `quantecon-book-theme` broke the sidebar table of contents.
+So for now, this is left in an unideal situation.
+I made an [issue](https://github.com/QuantEcon/quantecon-book-theme/issues/247) about updating the theme, but if they don't I may need to do it myself.

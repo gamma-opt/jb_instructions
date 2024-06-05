@@ -39,7 +39,7 @@ Enabling numbering can depend on the structure of your `_toc.yml` and how you wa
 
 There are two issues to consider here that work separately: the design of the website and the design of the PDF produced (assuming the latter happens via LaTeX).
 
-Currently, the PDF design follows the default options.
+For the PDF design, see [](pdf.md).
 
 The website uses [QuantEcon](https://github.com/QuantEcon/quantecon-book-theme) theme for the generated HTML. But there are a couple things to note:
 - The logo on the right margin (page-toc) is easily changeable in `_config.yml`.
