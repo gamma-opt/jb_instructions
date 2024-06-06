@@ -6,7 +6,9 @@ For example, figures likely don't change as often as the other content in a give
 Including figures as instructions that get compiled at every build is thus a waste of time, increasingly so as the notes grow larger and there are more figures.
 Thus it may make sense to create them separately and include them as pictures at relevant points.
 
-This guide is based on section 10.2.4 of the PGF manual, which can be found [here](https://www.ctan.org/pkg/pgf).
+```{note}
+There are some SVG related annoyances at {ref}`annoyance:svg-issues`.
+```
 
 ## Steps
 
@@ -14,7 +16,7 @@ This guide is based on section 10.2.4 of the PGF manual, which can be found [her
 
 2. Include it in a barebones LaTeX skeleton for compilation, such as
 ```latex
-\documentclass[dvisvgm]{minimal}
+\documentclass{standalone}
 \usepackage{tikz}
 \begin{document}
 YOUR CODE HERE!!!
@@ -29,8 +31,7 @@ The `WOFF` option should improve the display quality of the images when uploaded
 
 ```{note}
 I expect `dvisvgm` is included in your LaTeX distribution.
-If this is not the case and you don't want to obtain it, you can go to an alternative path by changing the document class to `standalone`, compiling to `.pdf` with `pdflatex/xelatex`, and converting to `.svg` with a program like `pdf2svg`.
-Though this may itself require installing `pdf2svg`.
+If this is not the case and you don't want to obtain it, you can go to an alternative path by compiling to `.pdf` with `pdflatex/xelatex`, and converting to `.svg` with a program like `pdftocairo`/`pdf2svg`.
 ```
 
 Possibly useful StackExchange discussion if something goes wrong in the above: [here](https://tex.stackexchange.com/questions/51757/how-can-i-use-tikz-to-make-standalone-svg-graphics).

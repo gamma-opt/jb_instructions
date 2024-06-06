@@ -83,3 +83,30 @@ This is now annoying because some configuration options for PDF (like `sphinxlig
 Naively removing the constraints in `quantecon-book-theme` broke the sidebar table of contents.
 So for now, this is left in an unideal situation.
 I made an [issue](https://github.com/QuantEcon/quantecon-book-theme/issues/247) about updating the theme, but if they don't I may need to do it myself.
+
+(annoyance:svg-issues)=
+## SVG-related problems
+
+This is relatively minor, but I'm writing down for the sake of having a record.
+First of all, and this is not (yet) a problem, the full potential of SVGs is not yet available in `sphinx` (and thus `jupyter-book`).
+By that I mean that directives like 
+````md
+```{figure} file.svg
+```
+````
+get converted to `<img>` tag in HTML, instead of `<svg>` or `<object>`.
+Related issue [here](https://github.com/sphinx-doc/sphinx/issues/2240)
+
+Also, using `:scale:` with SVGs is broken in `sphinx` for multiple reasons.
+One problem is that SVGs being XML documents, they accept single- or double-quoted strings, so `width="10pt"` and `width='10pt'` are equally valid.
+Some programs, like `dvisvgm` output single-quoted strings (as visible [here](https://github.com/mgieseki/dvisvgm/blob/1790f69b363945b1be30d463a93b2b45ab71195f/src/XMLNode.cpp#L384)).
+`sphinx` then uses a Python package called [`imagesize`](https://github.com/shibukawa/imagesize_py) to obtain the dimensions in the SVG, so that it can apply scaling.
+However, this is done with regex matching [here](https://github.com/shibukawa/imagesize_py/blob/8d88ec6b646d6184b5633604551d6fc154783073/imagesize/imagesize.py#L210-L211) that is hard-coded to double-quotes.
+Thus in single-quoted SVGs, the sizes are not obtained, so `sphinx` doesn't apply scaling.
+One can get around this by using a different library for obtaining SVGs, and `pdftocairo` seems good to me.
+Related issues in [`sphinx`](https://github.com/sphinx-doc/sphinx/issues/12415) and [`imagesize`](https://github.com/shibukawa/imagesize_py/issues/64).
+
+However, even if you have a double-quoted SVG, if the length units are in `pt`, conversion to `px` happens incorrectly, which leads to incorrect scaling.
+Related issue [here](https://github.com/shibukawa/imagesize_py/issues/42).
+
+Using `:height:` or `:width:` seem to work fine, and should circumvent the above issues.
