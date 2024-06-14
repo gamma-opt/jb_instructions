@@ -158,6 +158,8 @@ You can read more about this [here](https://docs.makie.org/stable/explanations/n
 
 To keep things a bit tidier, I define a couple more things as linked Observables.
 ```{code-cell}
+:tags: ["remove-output"]
+
 # Lines reordered according to the new permutation
 X_lines = @lift(X_coord[to_value($perm)])
 Y_lines = @lift(Y_coord[to_value($perm)])
@@ -170,6 +172,7 @@ In the above, since `perm` is an Observable, one cannot index a `Vector` by it.
 `to_value` is used to access the permutation `perm` contains, which results in a valid reordering operation.
 Using these newly defined Observables, we can plot the starting point of the graph.
 
+% This is a code-block, not a cell. See the comment below.
 ```{code-block}
 lines!(ax, X_lines, Y_lines)
 lines!(ax, X_endpoints, Y_endpoints)
@@ -235,8 +238,20 @@ end
 
 ## Interactive Example
 
+We can use `Bonito.jl` to obtain interactive examples.
+Since this website is static and does not communicate with an underlying Julia process, all the interactivity needs to happen in HTML/JavaScript.
+The `record_states` function records the possible states of a [Widget](https://simondanisch.github.io/Bonito.jl/stable/widgets.html) and how it affects related Observables, as an alternative to programming the behavior in JavaScript.
+
+```{warning}
+The [docs](https://simondanisch.github.io/Bonito.jl/stable/api.html#Bonito.record_states-Tuple{Session,%20Hyperscript.Node}) warn that `record_states` is experimental and unoptimized. 
+So you may want to be careful if you'll use it a lot.
+
+To give a specific example, the HTML files for other pages are about `~30kB`, but this one is about `~30MB`.
+```
+
+First, the best permutations are reobtained, because I didn't save them previously.
+
 ```{code-cell}
-:tags: ["remove-cell"]
 best_perms = []
 function logger(st)
     push!(best_perms, minimizer(st))
