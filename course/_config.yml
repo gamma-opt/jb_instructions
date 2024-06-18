@@ -37,6 +37,11 @@ sphinx:
     html_theme: quantecon_book_theme
     numfig_secnum_depth: 1  # https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-numfig_secnum_depth
     latex_domain_indices: false  # don't make proof index in PDF when using sphinx-proof
+
+    # needed for plotly to render (at least the python package)
+    html_js_files:
+    - https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js
+
     mathjax_path: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js  # Enable MathJax 3
     mathjax3_config:
       loader:

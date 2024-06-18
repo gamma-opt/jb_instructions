@@ -8,6 +8,7 @@ parts:
   - file: guides/update_from_template
   - file: guides/tsp_example
   - file: guides/standalone_svg
+  - file: guides/lp_simplex
 - caption: Tooling
   numbered: true
   chapters:
