@@ -9,6 +9,7 @@ parts:
   - file: guides/tsp_example
   - file: guides/standalone_svg
   - file: guides/lp_simplex
+  - file: guides/mip_branch_cut
 - caption: Tooling
   numbered: true
   chapters:
