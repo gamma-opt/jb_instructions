@@ -18,6 +18,10 @@ kernelspec:
 
 ## Linear Optimization
 
+```{raw} html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+```
+
 TODO: Write this section better and in more detail
 
 I'm assuming LP is explained in the lectures already but here is a short reminder.
@@ -26,9 +30,11 @@ We want to solve problems that are of the form
 ```{math}
 :label: lp_form
 
-\maxi c^\intercal x \\
-\stf Ax\leq b \\
-x\geq 0
+\begin{align*}
+\maxi &c^\intercal x \\
+\stf &Ax\leq b \\
+&x\geq 0
+\end{align*}
 ```
 where $x\in\reals^n$ are the decision variables, $A\in\reals^{m\times n}$ and $b\in\reals^m$ specify the constraints, and $c\in\reals^n$ gives the linear objective.
 LPs of other forms can be transformed into this form as well.
@@ -53,11 +59,13 @@ To exemplify this, consider the following LP
 ```{math}
 :label: lp_example
 
-\maxi 40x_1+60x_2 \\
-\stf 2x_1+x_2\leq 7 \\
-x_1+x_2\leq 4 \\
-x_1+3x_2\leq 9 \\
-x_1,x_2\geq 0.
+\begin{align*}
+\maxi &40x_1+60x_2 \\
+\stf &2x_1+x_2\leq 7 \\
+&x_1+x_2\leq 4 \\
+&x_1+3x_2\leq 9 \\
+&x_1,x_2\geq 0.
+\end{align*}
 ```
 
 The first step is to rewrite {eq}`lp_example` in the canonical form, where
@@ -67,11 +75,13 @@ The first step is to rewrite {eq}`lp_example` in the canonical form, where
 %TODO complete
 
 ```{math}
-\maxi 40x_1+60x_2 \\
-\stf x_3=7-2x_1-x_2 \\
-x_4=4-x_1-x_2 \\
-x_5=9-x_1-3x_2 \\
-x_1,x_2,x_3,x_4,x_5\geq 0.
+\begin{align*}
+\maxi &40x_1+60x_2 \\
+\stf &x_3=7-2x_1-x_2 \\
+&x_4=4-x_1-x_2 \\
+&x_5=9-x_1-3x_2 \\
+&x_1,x_2,x_3,x_4,x_5\geq 0.
+\end{align*}
 ```
 
 In the above, the set of (lone) variables in the LHS of the constraints (also called _basic_ variables) correspond to the vertices of the polyhedral that is the feasible region.
@@ -95,19 +105,23 @@ We can see that the most limiting constraint is {math}`x_3=7-2x_1-x_2`, so we so
 Substituting this to all {math}`x_1`s yields
 
 ```{math}
-\maxi 40(3.5-0.5x_2-0.5x_3)+60x_2 \\
-\stf x_1=3.5-0.5x_2-0.5x_3\\
-x_4=4-(3.5-0.5x_2-0.5x_3)-x_2 \\
-x_5=9-(3.5-0.5x_2-0.5x_3)-3x_2 \\
-x_1,x_2,x_3,x_4,x_5\geq 0
+\begin{align*}
+\maxi &40(3.5-0.5x_2-0.5x_3)+60x_2 \\
+\stf &x_1=3.5-0.5x_2-0.5x_3\\
+&x_4=4-(3.5-0.5x_2-0.5x_3)-x_2 \\
+&x_5=9-(3.5-0.5x_2-0.5x_3)-3x_2 \\
+&x_1,x_2,x_3,x_4,x_5\geq 0
+\end{align*}
 ```
 
 ```{math}
-\maxi 140+40x_2-20x_3 \\
-\stf x_1=3.5-0.5x_2-0.5x_3\\
-x_4=0.5-0.5x_2 +0.5x_3\\
-x_5=5.5-2.5x_2+0.5x_3 \\
-x_1,x_2,x_3,x_4,x_5\geq 0
+\begin{align*}
+\maxi &140+40x_2-20x_3 \\
+\stf &x_1=3.5-0.5x_2-0.5x_3\\
+&x_4=0.5-0.5x_2 +0.5x_3\\
+&x_5=5.5-2.5x_2+0.5x_3 \\
+&x_1,x_2,x_3,x_4,x_5\geq 0
+\end{align*}
 ```
 
 This completes a single iteration of the algorithm.
@@ -116,6 +130,19 @@ By repeating until no positive variable is left in the objective function, one o
 ## Visualization
 
 The visualization below is obtained via [GILP](https://gilp.henryrobbins.com/en/latest/index.html).
+
+`````{important}
+These visualizations working require `require.js` as noted [here](https://jupyterbook.org/en/stable/interactive/interactive.html#plotly). 
+However, the way to include them there puts this in every page, which is not necessary and potentially conflicting with other `js` frameworks (I couldn't get `d3` to work in {doc}`gradient`).
+So make sure you add something like
+````md
+```{raw} html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+```
+````
+at the start of your page when using this.
+`````
+
 You can hover over the vertices to see additional information, such as the value of the objective function at that point (labeled **Obj**), or the basic variables associated with the vertex (labeled **B**).
 
 ```{code-cell}
@@ -448,4 +475,180 @@ for month in range(5):
     for oil in range(5):
         inventory_plan.iloc[month, oil] = np.round(res.x[60+month*5+oil],1)
 inventory_plan
+```
+
+
+### Solving with OR-Tools
+
+This solution seems to be correct.
+
+```{code-cell} python
+from ortools.linear_solver import pywraplp
+solver = pywraplp.Solver.CreateSolver("GLOP")
+if not solver:
+    raise Exception("Couldn't create solver")
+
+hardness = [8.8, 6.1, 2, 4.2, 5]
+```
+
+```{code-cell} python
+buying = [[solver.NumVar(0, solver.infinity(), f"B-{month}-{oil}") for oil in columns] for month in rows]
+using = [[solver.NumVar(0, solver.infinity(), f"U-{month}-{oil}") for oil in columns] for month in rows]
+storing = [[solver.NumVar(0, 1000, f"S-{month}-{oil}") for oil in columns] for month in rows[:-1]]
+product = [solver.NumVar(0, solver.infinity(), f"P-{oil}") for month in rows]
+
+print("Number of variables =", solver.NumVariables())
+
+# storage constraints
+for oil in range(5):
+    # do january
+    solver.Add(buying[0][oil] - using[0][oil] - storing[0][oil] == -500)
+    for month in range(1, 5): # do middle months
+        solver.Add(storing[month-1][oil] + buying[month][oil] - using[month][oil] == storing[month][oil])
+    # do june
+    solver.Add(storing[4][oil] + buying[5][oil] - using[5][oil] == 500)
+
+
+for month in range(6):
+    solver.Add(sum(using[month]) == product[month])  # continuity
+
+    solver.Add(sum(using[month][:2]) <= 200)
+    solver.Add(sum(using[month][2:]) <= 250)
+
+    solver.Add(sum(hardness[oil]*using[month][oil] for oil in range(5)) <= 6*product[month])
+    solver.Add(sum(hardness[oil]*using[month][oil] for oil in range(5)) >= 3*product[month])
+
+print("Number of constraints =", solver.NumConstraints())
+
+cost_of_purchase = sum(oil_costs[month][oil]*buying[month][oil] for oil in range(5) for month in range(6))
+cost_of_storage = 5*sum(sum(x) for x in storing)
+revenue = 150*sum(product)
+solver.Maximize(revenue - cost_of_purchase - cost_of_storage)
+```
+
+```{code-cell}
+def p(x, m=6):
+    for month in range(m):
+      for oil in range(5):
+        print(f"{x[month][oil]} = {x[month][oil].solution_value()}")
+
+status = solver.Solve()
+if status == pywraplp.Solver.OPTIMAL:
+    print("Solution:")
+    print(f"Objective value = {solver.Objective().Value():0.1f}")
+    p(buying)
+    p(using)
+    p(storing, 5)
+    for month in range(6):
+        print(f"{product[month]} = {product[month].solution_value()}")
+    print(solver)
+else:
+    print("The problem does not have an optimal solution.")
+```
+
+```{code-cell}
+import pandas as pd
+
+from ortools.linear_solver import pywraplp
+
+
+# Define input data
+prices = pd.DataFrame(
+    index=["January", "February", "March", "April", "May", "June"],
+    data={
+        "VEG 1": [110, 130, 110, 120, 100,  90],
+        "VEG 2": [120, 130, 140, 110, 120, 100],
+        "OIL 1": [130, 110, 130, 120, 150, 140],
+        "OIL 2": [110,  90, 100, 120, 110,  80],
+        "OIL 3": [115, 115,  95, 125, 105, 135],
+    },
+)
+hardness = [8.8, 6.1, 2.0, 4.2, 5.0]
+price_per_ton = 150
+storage_cost_per_ton_per_month = 5
+storage_limit = 1000
+hardness_lower_bound = 3
+hardness_upper_bound = 6
+initial_storage_amount = 500
+final_storage_amount = 500
+maximum_vegetable_refinement_per_month = 200
+maximum_non_vegetable_refinement_per_month = 250
+
+
+if __name__ == "__main__":
+
+    # Create solver
+    solver = pywraplp.Solver.CreateSolver("GLOP")
+
+    # Index sets
+    I = range(0, prices.shape[1])  # oils
+    J = range(0, prices.shape[0])  # months
+
+    # Upper bounds
+    upper_bound_x = max(maximum_vegetable_refinement_per_month, maximum_non_vegetable_refinement_per_month)
+    upper_bound_b = storage_limit + upper_bound_x
+    upper_bound_y = maximum_vegetable_refinement_per_month + maximum_non_vegetable_refinement_per_month
+
+    # Define variables
+    x = [[solver.NumVar(0, upper_bound_x, f"x_{i}{j}") for j in J] for i in I]  # amount of oil i to be refined in month j
+    b = [[solver.NumVar(0, upper_bound_b, f"b_{i}{j}") for j in J] for i in I]  # amount of oil i to be bought in month j
+    s = [[solver.NumVar(0, storage_limit, f"s_{i}{j}") for j in J] for i in I]  # amount of oil i in storage at the end of month j
+    y = [solver.NumVar(0, upper_bound_y, f"y_{j}") for j in J]  # production in month j
+    print("Number of variables =", solver.NumVariables())
+
+    # At most 200 tons of vegetable oils refined per month
+    for j in J:
+        solver.Add(x[0][j] + x[1][j] <= maximum_vegetable_refinement_per_month)
+
+    # At most 250 tons of non-vegetable oils refined per month
+    for j in J:
+        solver.Add(x[2][j] + x[3][j] + x[4][j] <= maximum_non_vegetable_refinement_per_month)
+
+    # Amount of product produced in month j
+    for j in J:
+        solver.Add(sum(x[i][j] for i in I) == y[j])
+
+    # Hardness lower bound fulfilled
+    for j in J:
+        solver.Add(sum(hardness[i] * x[i][j] for i in I) >= hardness_lower_bound * y[j])
+
+    # Hardness upper bound fulfilled
+    for j in J:
+        solver.Add(sum(hardness[i] * x[i][j] for i in I) <= hardness_upper_bound * y[j])
+
+    # Exactly 500 of each type remaining at the end of june
+    for i in I:
+        solver.Add(s[i][5] == final_storage_amount)
+
+    # Storage at the end of a month is consistent with the initial storage, the amount bought and the amount refined
+    for i in I:
+        for j in J:
+            if j > 0:
+                solver.Add(s[i][j] == s[i][j-1] + b[i][j] - x[i][j])
+
+    # Storage at the end of January is consistent with initial storage of 500 of each type
+    for i in I:
+        solver.Add(s[i][0] == initial_storage_amount + b[i][0] - x[i][0])
+
+    # Objective function
+    material_costs = sum(prices.iloc[j].iloc[i] * b[i][j] for i in I for j in J)
+    storage_costs = storage_cost_per_ton_per_month * sum(s[i][j] for i in I for j in J)
+    revenues = price_per_ton * sum(y[j] for j in J)
+    objective = revenues - material_costs - storage_costs
+    solver.Maximize(objective)
+
+    # Solve the program
+    status = solver.Solve()
+
+    # Check if a solution was found
+    if status == pywraplp.Solver.OPTIMAL:
+        print('Solution:')
+        print('Objective value =', solver.Objective().Value())
+        for i in I:
+            for j in J:
+                print(f'x_{i}{j} =', x[i][j].solution_value())
+        print(solver)
+    else:
+        print('The problem does not have an optimal solution.')
+
 ```
