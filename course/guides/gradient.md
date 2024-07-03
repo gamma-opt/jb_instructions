@@ -21,11 +21,14 @@ In general, optimization problems look like
 
 ```{math}
 :label: opt_problem
+:nowrap:
 
-\mini f(x) \\
-\stf g_i(x)\leq 0, i=1,\dots,m \\
-h_i(x)=0, i=1,\dots,l \\
-x\in X.
+\begin{align*}
+\mini &f(x) \\
+\stf &g_i(x)\leq 0, i=1,\dots,m \\
+&h_i(x)=0, i=1,\dots,l \\
+&x\in X.
+\end{align*}
 ```
 
 Depending on the properties of {math}`f, g, h`, one can use {doc}`linear programming <lp_simplex>` or {doc}`MILP <mip_branch_cut>` methods.
@@ -179,7 +182,7 @@ Convexity effectively means that local information can be used globally and that
 
 ## Gradient descent and variants
 
-Visualization by [Emilien Dupont](https://emiliendupont.github.io/2018/01/24/optimization-visualization/).
+Adapted from [Emilien Dupont's code.](https://emiliendupont.github.io/2018/01/24/optimization-visualization/).
 
 % This requires `d3.v4.js `, which is currently provided via _config.yml.
 ```{raw} html
@@ -584,16 +587,16 @@ function golden_ls(f, a, b, l) {
 
 function get_newton_path(x0, y0, num_steps, tol) {
     let newton_history = [{"x": scale_x.invert(x0), "y": scale_y.invert(y0)}];
-    let x1, y1, gradient, hessian, step;
+    let x1, y1, gradient, hessian, lr;
     for (i = 0; i < num_steps; i++) {
         gradient = grad_f(x0, y0);
         if (math.norm(gradient) < tol) return newton_history;
         hessian = hess_f(x0, y0);
         dir = math.chain(hessian).inv().multiply(gradient, -1).done()
         const foo = (l) => f(x0 + l*dir[0], y0 + l*dir[1])
-        learning_rate = golden_ls(foo, 0, 10, 1e-7)
-        x1 = x0 + learning_rate * dir[0]
-        y1 = y0 + learning_rate * dir[1]
+        lr = golden_ls(foo, 0, 10, 1e-7)
+        x1 = x0 + lr * dir[0]
+        y1 = y0 + lr * dir[1]
         newton_history.push({"x" : scale_x.invert(x1), "y" : scale_y.invert(y1)})
         x0 = x1
         y0 = y1
@@ -604,30 +607,32 @@ function get_newton_path(x0, y0, num_steps, tol) {
 function get_bfgs_path(x0, y0, num_steps, tol) {
     let bfgs_history = [{"x": scale_x.invert(x0), "y": scale_y.invert(y0)}];
     let x1, y1, gradient, s, g, rho;
-    const id_matrix = [[1,0],[0,1]];
+    const id_matrix = math.matrix([[1.,0.],[0.,1.]]);
     let H = id_matrix;
     let next_grad = grad_f(x0, y0);
     for (i = 0; i < num_steps; i++) {
         gradient = next_grad;
         if (math.norm(gradient) < tol) return bfgs_history;
         dir = math.chain(H).multiply(gradient, -1).done();
-        const foo = (l) => f(x0 + l*dir[0], y0 + l*dir[1]);
-        learning_rate = golden_ls(foo, 0, 10, 1e-7);
-        x1 = x0 + learning_rate * dir[0];
-        y1 = y0 + learning_rate * dir[1];
+        const foo = (l) => f(x0 + l*dir.get([0]), y0 + l*dir.get([1]));
+        lr = golden_ls(foo, 0, 10, 1e-7);
+        x1 = x0 + lr * dir.get([0]);
+        y1 = y0 + lr * dir.get([1]);
         bfgs_history.push({"x" : scale_x.invert(x1), "y" : scale_y.invert(y1)});
-        s = [x1-x0, y1-y0];
+        s = math.matrix([[x1-x0, y1-y0]]);
         next_grad = grad_f(x1, y1);
-        g = math.subtract(next_grad, gradient);
-        rho = math.chain(g).multiply(s).inv().done();
+        g = math.matrix([math.subtract(next_grad, gradient)]);
+        rho = math.chain(g).multiply(math.transpose(s)).inv().done().get([0,0]);
         H = math.add(
                 math.multiply(
-                    math.subtract(id_matrix, math.multiply(rho, s, g)),
+                    math.subtract(id_matrix, math.multiply(rho, math.transpose(s), g)),
                     H,
-                    math.subtract(id_matrix, math.multiply(rho, g, s))
+                    math.subtract(id_matrix, math.multiply(rho, math.transpose(g), s))
                 ),
-                math.multiply(rho, s, s)
+                math.multiply(rho, math.transpose(s), s)
         );
+        x0 = x1;
+        y0 = y1;
     }
     return bfgs_history;
 }
