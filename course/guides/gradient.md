@@ -272,13 +272,13 @@ function f(x, y) {
 }
 
 /* Returns gradient of f at (x, y) */
-function grad_f(x,y) {
+function grad_f(f,x,y) {
     let grad_x = (f(x + h, y) - f(x, y)) / h
         grad_y = (f(x, y + h) - f(x, y)) / h
     return [grad_x, grad_y];
 }
 
-function hess_f(x,y) {
+function hess_f(f,x,y) {
     const xx = (f(x + h, y) - 2*f(x, y) + f(x - h, y)) / (h * h),
           xy = (f(x + h, y + h) - f(x, y + h) - f(x + h, y) + f(x, y)) / (h * h),
           yy = (f(x, y + h) - 2*f(x, y) + f(x, y - h)) / (h * h);
@@ -287,20 +287,20 @@ function hess_f(x,y) {
 
 
 /* Returns values of f(x,y) at each point on grid as 1 dim array. */
-function get_f_values(nx, ny) {
+function get_values(fun, nx, ny) {
     let grid = new Array(nx * ny);
     for (i = 0; i < nx; i++) {
         for (j = 0; j < ny; j++) {
             let x = scale_x( parseFloat(i) / nx * width ),
                 y = scale_y( parseFloat(j) / ny * height );
             // Set value at ordering expected by d3.contour
-            grid[i + j * nx] = f(x, y);
+            grid[i + j * nx] = fun(x, y);
         }
     }
     return grid;
 }
 
-const f_values = get_f_values(nx, ny);
+let f_values = get_values(f, nx, ny);
 
 function draw_contour(selector, mousedown_fn) {
     const svg = d3.select(selector)
@@ -382,7 +382,7 @@ const gradient_container = {
     "Adam": [get_adam_path, 1e-2, 100, 0.7, 0.999, 1e-6]
 }
 
-function create_interactive_plot(selector, method_container) {
+function create_interactive_plot(selector, method_container, obj_f) {
     const svg = draw_contour(selector, mouse_fn);
     let draw_state = create_menu(svg, Object.keys(method_container));
     const path_g = svg.append("g");
@@ -396,14 +396,14 @@ function create_interactive_plot(selector, method_container) {
         path_g.selectAll("path").remove();
         for (const [name, [f, ...rest]] of Object.entries(method_container)){
             if (draw_state[name]) {
-                let data = f(x0, y0, ...rest);
+                let data = f(obj_f, x0, y0, ...rest);
                 draw_path(data, name.toLowerCase(), path_g)
             }
         }
     }
 }
 
-create_interactive_plot("#d3-gd", gradient_container);
+create_interactive_plot("#d3-gd", gradient_container, f);
 
 
 /*
@@ -411,11 +411,11 @@ create_interactive_plot("#d3-gd", gradient_container);
  * SGD, Momentum, RMSProp, Adam.
  */
 
-function get_sgd_path(x0, y0, learning_rate, num_steps) {
+function get_sgd_path(f, x0, y0, learning_rate, num_steps) {
     let sgd_history = [{"x": scale_x.invert(x0), "y": scale_y.invert(y0)}];
     let x1, y1, gradient;
     for (i = 0; i < num_steps; i++) {
-        gradient = grad_f(x0, y0);
+        gradient = grad_f(f, x0, y0);
         x1 = x0 - learning_rate * gradient[0]
         y1 = y0 - learning_rate * gradient[1]
         sgd_history.push({"x" : scale_x.invert(x1), "y" : scale_y.invert(y1)})
@@ -425,13 +425,13 @@ function get_sgd_path(x0, y0, learning_rate, num_steps) {
     return sgd_history;
 }
 
-function get_momentum_path(x0, y0, learning_rate, num_steps, momentum) {
+function get_momentum_path(f, x0, y0, learning_rate, num_steps, momentum) {
     let v_x = 0,
         v_y = 0;
     let momentum_history = [{"x": scale_x.invert(x0), "y": scale_y.invert(y0)}];
     let x1, y1, gradient;
     for (i=0; i < num_steps; i++) {
-        gradient = grad_f(x0, y0)
+        gradient = grad_f(f, x0, y0)
         v_x = momentum * v_x - learning_rate * gradient[0]
         v_y = momentum * v_y - learning_rate * gradient[1]
         x1 = x0 + v_x
@@ -443,13 +443,13 @@ function get_momentum_path(x0, y0, learning_rate, num_steps, momentum) {
     return momentum_history
 }
 
-function get_rmsprop_path(x0, y0, learning_rate, num_steps, decay_rate, eps) {
+function get_rmsprop_path(f, x0, y0, learning_rate, num_steps, decay_rate, eps) {
     let cache_x = 0,
         cache_y = 0;
     let rmsprop_history = [{"x": scale_x.invert(x0), "y": scale_y.invert(y0)}];
     let x1, y1, gradient;
     for (i = 0; i < num_steps; i++) {
-        gradient = grad_f(x0, y0)
+        gradient = grad_f(f, x0, y0)
         cache_x = decay_rate * cache_x + (1 - decay_rate) * gradient[0] * gradient[0]
         cache_y = decay_rate * cache_y + (1 - decay_rate) * gradient[1] * gradient[1]
         x1 = x0 - learning_rate * gradient[0] / (Math.sqrt(cache_x) + eps)
@@ -461,7 +461,7 @@ function get_rmsprop_path(x0, y0, learning_rate, num_steps, decay_rate, eps) {
     return rmsprop_history;
 }
 
-function get_adam_path(x0, y0, learning_rate, num_steps, beta_1, beta_2, eps) {
+function get_adam_path(f, x0, y0, learning_rate, num_steps, beta_1, beta_2, eps) {
     let m_x = 0,
         m_y = 0,
         v_x = 0,
@@ -469,7 +469,7 @@ function get_adam_path(x0, y0, learning_rate, num_steps, beta_1, beta_2, eps) {
     let adam_history = [{"x": scale_x.invert(x0), "y": scale_y.invert(y0)}];
     let x1, y1, gradient;
     for (i = 0; i < num_steps; i++) {
-        gradient = grad_f(x0, y0)
+        gradient = grad_f(f, x0, y0)
         m_x = beta_1 * m_x + (1 - beta_1) * gradient[0]
         m_y = beta_1 * m_y + (1 - beta_1) * gradient[1]
         v_x = beta_2 * v_x + (1 - beta_2) * gradient[0] * gradient[0]
@@ -557,7 +557,7 @@ const newton_container = {
     "Newton": [get_newton_path, 300, 1e-4],
     "BFGS": [get_bfgs_path, 100, 1e-4]
 }
-create_interactive_plot("#d3-newton", newton_container);
+create_interactive_plot("#d3-newton", newton_container, f);
 
 function golden_ls(f, a, b, l) {
     const alpha = 0.618 // 1/golden_ratio
@@ -585,13 +585,13 @@ function golden_ls(f, a, b, l) {
     return (a+b)/2
 }
 
-function get_newton_path(x0, y0, num_steps, tol) {
+function get_newton_path(f, x0, y0, num_steps, tol) {
     let newton_history = [{"x": scale_x.invert(x0), "y": scale_y.invert(y0)}];
     let x1, y1, gradient, hessian, lr;
     for (i = 0; i < num_steps; i++) {
-        gradient = grad_f(x0, y0);
+        gradient = grad_f(f, x0, y0);
         if (math.norm(gradient) < tol) return newton_history;
-        hessian = hess_f(x0, y0);
+        hessian = hess_f(f, x0, y0);
         dir = math.chain(hessian).inv().multiply(gradient, -1).done()
         const foo = (l) => f(x0 + l*dir[0], y0 + l*dir[1])
         lr = golden_ls(foo, 0, 10, 1e-7)
@@ -604,12 +604,12 @@ function get_newton_path(x0, y0, num_steps, tol) {
     return newton_history;
 }
 
-function get_bfgs_path(x0, y0, num_steps, tol) {
+function get_bfgs_path(f, x0, y0, num_steps, tol) {
     let bfgs_history = [{"x": scale_x.invert(x0), "y": scale_y.invert(y0)}];
     let x1, y1, gradient, s, g, rho;
     const id_matrix = math.matrix([[1.,0.],[0.,1.]]);
     let H = id_matrix;
-    let next_grad = grad_f(x0, y0);
+    let next_grad = grad_f(f, x0, y0);
     for (i = 0; i < num_steps; i++) {
         gradient = next_grad;
         if (math.norm(gradient) < tol) return bfgs_history;
@@ -620,7 +620,7 @@ function get_bfgs_path(x0, y0, num_steps, tol) {
         y1 = y0 + lr * dir.get([1]);
         bfgs_history.push({"x" : scale_x.invert(x1), "y" : scale_y.invert(y1)});
         s = math.matrix([[x1-x0, y1-y0]]);
-        next_grad = grad_f(x1, y1);
+        next_grad = grad_f(f, x1, y1);
         g = math.matrix([math.subtract(next_grad, gradient)]);
         rho = math.chain(g).multiply(math.transpose(s)).inv().done().get([0,0]);
         H = math.add(
@@ -635,6 +635,31 @@ function get_bfgs_path(x0, y0, num_steps, tol) {
         y0 = y1;
     }
     return bfgs_history;
+}
+</script>
+```
+
+## Playground
+
+WIP
+
+Considerations:
+- security: This is all client-side so I expect it should be fine to evaluate arbitrary input from users. The only concern I can imagine is that if the expression is for some reason very complicated, it could take up too much CPU and freeze. This may be prevented with something like [this](https://github.com/josdejong/workerpool).
+- domain: The function domain is right now hardcoded to `[-2,2]**2`. I think it may be annoying to make it
+
+```{raw} html
+Enter a math expression: <input type="text" id="eq-box"/> <button onclick="onClick()">Draw</button>
+<div id="d3-custom"></div>
+
+<script>
+function onClick() {
+    const inputBox = document.getElementById("eq-box");
+    const val = inputBox.value;
+    const f = math.evaluate("f(x,y)=" + val);
+    f_values = get_values(f, nx, ny);
+    console.log(f_values.slice(0,5));
+    d3.select("#d3-custom").selectAll("*").remove() 
+    create_interactive_plot("#d3-custom", gradient_container, f);
 }
 </script>
 ```
