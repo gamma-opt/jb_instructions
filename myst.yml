@@ -1,0 +1,15 @@
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: 2bbe132f-65ef-4b86-8344-4b1b0e18dbee
+  # title:
+  # description:
+  # keywords: []
+  # authors: []
+  github: https://github.com/gamma-opt/jb_instructions
+  # To autogenerate a Table of Contents, run "myst init --write-toc"
+site:
+  template: book-theme
+  # options:
+  #   favicon: favicon.ico
+  #   logo: site_logo.png

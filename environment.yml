@@ -1,27 +1,20 @@
-name: jb_course
+name: jb_myst
 channels:
   - conda-forge
 dependencies:
-  - jupyter-book
-
-  # Diagrams with Mermaid.js
-  - sphinxcontrib-mermaid
-
-  - python=3.10
+  - nodejs
+  - mystmd
+  - jupyter_server
+  - ipykernel
 
   # For Python interactive plots example
   - bokeh
   - numpy
 
-  # https://github.com/pydata/pydata-sphinx-theme/issues/1844
-  - pydata-sphinx-theme==0.15.2
-
   - ortools-python
 
   - pip
   - pip:
-    - sphinx-proof
     - gilp
-    - git+https://github.com/QuantEcon/quantecon-book-theme.git
 
 
